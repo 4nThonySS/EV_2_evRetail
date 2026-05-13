@@ -21,4 +21,5 @@ public class ProductoRequest {
     @Min(value = 0, message = "El stock debe ser mayor o igual a 0")
     private Integer stock;
 
+
 }
