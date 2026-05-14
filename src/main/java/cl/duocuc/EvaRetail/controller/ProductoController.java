@@ -1,6 +1,7 @@
 package cl.duocuc.EvaRetail.controller;
 
 
+import cl.duocuc.EvaRetail.dto.ApiResponse;
 import cl.duocuc.EvaRetail.dto.ProductoRequest;
 import cl.duocuc.EvaRetail.dto.ProductoResponse;
 import cl.duocuc.EvaRetail.service.ProductoService;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -59,12 +59,28 @@ public class ProductoController {
     //eliminar x id
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<Object>> eliminarProducto(@PathVariable Long id){
 
         productoService.eliminarProducto(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        200,
+                        "Producto eliminado correctamente",
+                        false,
+                        null
+                )
+        );
     }
 
+    @PutMapping("/{id}/reducir-stock")
+    public ResponseEntity<ProductoResponse> reducirStock(
+            @PathVariable Long id,
+            @RequestParam Integer cantidad){
+
+        return ResponseEntity.ok(
+                productoService.reducirStock(id, cantidad)
+        );
+    }
 
 }

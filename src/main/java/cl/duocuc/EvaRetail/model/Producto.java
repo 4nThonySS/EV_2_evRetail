@@ -17,11 +17,15 @@ import lombok.Setter;
 //Tabla producto
     public class Producto {
         //Coumna ID
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "id_producto", precision = 10)
-        private Long id;
 
+        @Id
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "producto_seq")
+        @SequenceGenerator(
+                name = "producto_seq",
+                sequenceName = "SEQ_PRODUCTO",
+                allocationSize = 1
+        )
+        private Long id;
 
         //columna nombre
         @Column(name = "nombre", nullable = false, length = 100)
