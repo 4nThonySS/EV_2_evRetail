@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+
+import java.util.List;
+@Slf4j
 @RestController
 @RequestMapping("/api/productos")
 @RequiredArgsConstructor
@@ -23,8 +26,11 @@ public class ProductoController {
     //istar
     @GetMapping
     public ResponseEntity<List<ProductoResponse>> listarProductos() {
+        log.info("Recibida petición GET para listar productos");
+        List<ProductoResponse> productos = productoService.listarProductos();
+        log.info("Retornando {} productos", productos.size());
 
-        return ResponseEntity.ok(productoService.listarProductos());
+        return ResponseEntity.ok(productos);
     }
 
 
@@ -33,16 +39,18 @@ public class ProductoController {
     public ResponseEntity<ProductoResponse> guardarProducto(
             @Valid @RequestBody ProductoRequest request) {
 
+        log.info("Recibida petición POST para crear producto: {}", request.getNombre());
         ProductoResponse response = productoService.guardarProducto(request);
 
+        log.info("Producto creado correctamente, retornando respuesta");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     //buscar x id
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoResponse> obtenerProductoPorID(
-            @PathVariable Long id){
-
+    public ResponseEntity<ProductoResponse> obtenerProductoPorID(@PathVariable Long id) {
+        log.info("Recibida petición GET para obtener producto ID: {}", id);
         return ResponseEntity.ok(productoService.obtenerProductoPorID(id));
     }
 
@@ -50,37 +58,37 @@ public class ProductoController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductoResponse> actualizarProducto(
             @PathVariable Long id,
-            @Valid @RequestBody ProductoRequest request){
+            @Valid @RequestBody ProductoRequest request) {
 
+        log.info("Recibida petición PUT para actualizar producto ID: {}", id);
         return ResponseEntity.ok(productoService.actualizarProducto(id, request));
     }
 
 
     //eliminar x id
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> eliminarProducto(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<Object>> eliminarProducto(@PathVariable Long id) {
+        log.info("Recibida petición DELETE para eliminar producto ID: {}", id);
 
         productoService.eliminarProducto(id);
 
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        200,
-                        "Producto eliminado correctamente",
-                        false,
-                        null
-                )
-        );
+        log.info("Producto eliminado correctamente");
+        return ResponseEntity.ok(new ApiResponse<>(
+                200,
+                "Producto eliminado correctamente",
+                false,
+                null));
     }
 
     @PutMapping("/{id}/reducir-stock")
     public ResponseEntity<ProductoResponse> reducirStock(
             @PathVariable Long id,
-            @RequestParam Integer cantidad){
+            @RequestParam Integer cantidad) {
 
-        return ResponseEntity.ok(
-                productoService.reducirStock(id, cantidad)
-        );
+        log.info("Recibida petición para reducir stock - ID: {}, Cantidad: {}", id, cantidad);
+        return ResponseEntity.ok(productoService.reducirStock(id, cantidad));
     }
 
 }
