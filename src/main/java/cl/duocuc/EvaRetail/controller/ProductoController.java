@@ -23,7 +23,7 @@ public class ProductoController {
 
     private final ProductoService productoService;
 
-    //istar
+    //lstar
     @GetMapping
     public ResponseEntity<List<ProductoResponse>> listarProductos() {
         log.info("Recibida petición GET para listar productos");
